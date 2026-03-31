@@ -20,10 +20,10 @@ body {
   position: relative;
   width: 4147px;
   height: 1556px;
-  
 }
 
-#fondoImagen {
+/* VIDEO FONDO */
+#fondoVideo {
   position: absolute;
   top: 0;
   left: 0;
@@ -107,7 +107,10 @@ body {
 <body>
 <div class="container">
 
-<img id="fondoImagen" src="CLIMADIA.png" />
+<!-- VIDEO -->
+<video id="fondoVideo" autoplay muted loop playsinline>
+  <source id="videoSource" src="CLIMADIA.mp4" type="video/mp4">
+</video>
 
 <div id="clock" class="time"></div>
 <div id="dayName" class="day-name"></div>
@@ -118,6 +121,9 @@ body {
 <div id="weather" class="weather"></div>
 <div id="weatherText" class="weather-description"></div>
 
+<!-- MENSAJE -->
+<div id="greeting" class="greeting"></div>
+
 </div>
 
 <script>
@@ -125,7 +131,6 @@ body {
 /* ========================
 RELOJ
 ======================== */
-
 function updateClock() {
   const now = new Date();
 
@@ -142,9 +147,8 @@ function updateClock() {
 }
 
 /* ========================
-FONDO DIA / NOCHE
+FONDO VIDEO DIA / NOCHE
 ======================== */
-
 function updateBackgroundImage() {
   const hour = new Date().getHours();
   const video = document.getElementById("fondoVideo");
@@ -158,7 +162,7 @@ function updateBackgroundImage() {
     newSrc = "CLIMADIA.mp4";
   }
 
-  if (source.src.indexOf(newSrc) === -1) {
+  if (!source.src.includes(newSrc)) {
     source.src = newSrc;
     video.load();
     video.play();
@@ -166,59 +170,34 @@ function updateBackgroundImage() {
 }
 
 /* ========================
-ICONOS AGRUPADOS
+ICONOS
 ======================== */
-
 function getWeatherIcon(weatherId, iconCode) {
 
   const isNight = iconCode.includes("n");
 
-  // Tormenta
-  if (weatherId >= 200 && weatherId < 300) {
-    return "Iconos/Tormenta.svg";
-  }
+  if (weatherId >= 200 && weatherId < 300) return "Iconos/Tormenta.svg";
+  if (weatherId >= 300 && weatherId < 600) return "Iconos/Lluvia.svg";
+  if (weatherId === 771) return "Iconos/Vientos fuertes.svg";
 
-  // Lluvia y llovizna
-  if (weatherId >= 300 && weatherId < 600) {
-    return "Iconos/Lluvia.svg";
-  }
-
-  // Vientos fuertes
-  if (weatherId === 771) {
-    return "Iconos/Vientos fuertes.svg";
-  }
-
-  // Niebla / bruma / atmósfera
   if (weatherId >= 700 && weatherId < 800) {
-    return isNight
-      ? "Iconos/Nublado(noche).svg"
-      : "Iconos/Nublado.svg";
+    return isNight ? "Iconos/Nublado(noche).svg" : "Iconos/Nublado.svg";
   }
 
-  // Cielo despejado
   if (weatherId === 800) {
-    return isNight
-      ? "Iconos/Despejado(Noche).svg"
-      : "Iconos/Soleado.svg";
+    return isNight ? "Iconos/Despejado(Noche).svg" : "Iconos/Soleado.svg";
   }
 
-  // Nubes
   if (weatherId > 800) {
-    return isNight
-      ? "Iconos/Nublado(noche).svg"
-      : "Iconos/Nublado.svg";
+    return isNight ? "Iconos/Nublado(noche).svg" : "Iconos/Nublado.svg";
   }
 
-  // Fallback
-  return isNight
-    ? "Iconos/Despejado(Noche).svg"
-    : "Iconos/Soleado.svg";
+  return isNight ? "Iconos/Despejado(Noche).svg" : "Iconos/Soleado.svg";
 }
 
 /* ========================
 CLIMA
 ======================== */
-
 async function fetchWeather() {
 
   const apiKey = "65fd2c24a1679d15f7b59502783522f7";
@@ -227,7 +206,6 @@ async function fetchWeather() {
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=es`;
 
   try {
-
     const response = await fetch(url);
     const data = await response.json();
 
@@ -243,7 +221,7 @@ async function fetchWeather() {
 
     const iconElement = document.getElementById("weatherIconBig");
 
-    if (iconElement.src !== iconPath) {
+    if (!iconElement.src.includes(iconPath)) {
       iconElement.src = iconPath;
     }
 
@@ -252,6 +230,10 @@ async function fetchWeather() {
     console.error("Error clima:", error);
   }
 }
+
+/* ========================
+MENSAJE DINÁMICO
+======================== */
 function updateGreeting() {
   const now = new Date();
   const hour = now.getHours();
@@ -261,26 +243,18 @@ function updateGreeting() {
 
   if (hour >= 5 && (hour < 12 || (hour === 12 && minutes === 0))) {
     message = "BUENOS DÍAS";
-  } else if (
-    (hour === 12 && minutes >= 1) ||
-    (hour > 12 && hour < 18) ||
-    (hour === 18 && minutes === 0)
-  ) {
+  } else if (hour < 18 || (hour === 18 && minutes === 0)) {
     message = "BUENAS TARDES";
-  } else if (
-    (hour === 18 && minutes >= 1) ||
-    (hour > 18 && hour < 23) ||
-    (hour === 23 && minutes <= 30)
-  ) {
+  } else if (hour < 23 || (hour === 23 && minutes <= 30)) {
     message = "BUENAS NOCHES";
   }
 
   document.getElementById("greeting").textContent = message;
 }
+
 /* ========================
 INIT
 ======================== */
-
 updateClock();
 setInterval(updateClock, 1000);
 
