@@ -38,27 +38,27 @@ body {
   top: 61%;
   left: 23%;
   transform: translate(-50%, -50%);
-  font-size: 180px;
+  font-size: 157px;
   font-weight: bold;
   color: #ffffff;
 }
 
 .day-name {
   position: absolute;
-  top: 73%;
+  top: 72%;
   left: 22%;
   transform: translate(-50%, -50%);
-  font-size: 100px;
+  font-size: 90px;
   font-weight: bold;
-  color: white;
+  color: #4a90e2;
 }
 
 .date {
   position: absolute;
-  top: 78%;
+  top: 79%;
   left: 22%;
   transform: translate(-50%, -50%);
-  font-size: 100px;
+  font-size: 90px;
   font-weight: bold;
   color: #4a90e2;
   white-space: nowrap;
@@ -83,22 +83,32 @@ body {
   color: #000000;
 }
 
-.greeting {
+#greetingTop {
   position: absolute;
-  top: 8%;
-  left: 90%;
+  top: 5%;   /* ajusta */
+  left: 93.5%;
   transform: translate(-50%, -50%);
   font-size: 140px;
   font-weight: bold;
-  color: white;
+  color: #4a90e2;
+}
+
+#greetingBottom {
+  position: absolute;
+  top: 56%;  /* más abajo */
+  left: 4%;
+  transform: translate(-50%, -50%);
+  font-size: 140px;
+  font-weight: bold;
+  color: #4a90e2;
 }
 
 .weather-description {
   position: absolute;
-  top: 25%;
-  left: 67%;
+  top: 24%;
+  left: 68%;
   transform: translate(-50%, -50%);
-  font-size: 60px;
+  font-size: 68px;
   color: #4a90e2;
 }
 </style>
@@ -122,7 +132,8 @@ body {
 <div id="weatherText" class="weather-description"></div>
 
 <!-- MENSAJE -->
-<div id="greeting" class="greeting"></div>
+<div id="greetingTop" class="greeting"></div>
+<div id="greetingBottom" class="greeting"></div>
 
 </div>
 
@@ -139,11 +150,11 @@ function updateClock() {
 
   document.getElementById("clock").textContent = `${hours}:${minutes}`;
 
-  const days = ["DOM","LUN","MAR","MIE","JUE","VIE","SAB"];
+  const days = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"];
   const months = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
   document.getElementById("dayName").textContent = days[now.getDay()];
-  document.getElementById("date").textContent = `${now.getDate()} DE ${months[now.getMonth()].toUpperCase()}`;
+  document.getElementById("date").textContent = `${now.getDate()} de ${months[now.getMonth()]}`;
 }
 
 /* ========================
@@ -217,8 +228,7 @@ async function fetchWeather() {
     const iconPath = getWeatherIcon(weatherId, iconCode);
 
     document.getElementById("weather").textContent = `${temperature}°C`;
-    document.getElementById("weatherText").textContent = description.toUpperCase();
-
+    document.getElementById("weatherText").textContent = description;
     const iconElement = document.getElementById("weatherIconBig");
 
     if (!iconElement.src.includes(iconPath)) {
@@ -239,17 +249,22 @@ function updateGreeting() {
   const hour = now.getHours();
   const minutes = now.getMinutes();
 
-  let message = "";
+  let topText = "";
+  let bottomText = "";
 
   if (hour >= 5 && (hour < 12 || (hour === 12 && minutes === 0))) {
-    message = "BUENOS DÍAS";
+    topText = "Buenos";
+    bottomText = "días";
   } else if (hour < 18 || (hour === 18 && minutes === 0)) {
-    message = "BUENAS TARDES";
+    topText = "Buenas";
+    bottomText = "tardes";
   } else if (hour < 23 || (hour === 23 && minutes <= 30)) {
-    message = "BUENAS NOCHES";
+    topText = "Buenas";
+    bottomText = "noches";
   }
 
-  document.getElementById("greeting").textContent = message;
+  document.getElementById("greetingTop").textContent = topText;
+  document.getElementById("greetingBottom").textContent = bottomText;
 }
 
 /* ========================
