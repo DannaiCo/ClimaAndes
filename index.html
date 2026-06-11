@@ -56,19 +56,19 @@ body {
 .day-name {
   position: absolute;
   top: 72%;
-  left: 22%;
+  left: 23%;
   transform: translate(-50%, -50%);
   font-size: 90px;
-  color: #4a90e2;
+  color: white;
 }
 
 .date {
   position: absolute;
   top: 79%;
-  left: 22%;
+  left: 23%;
   transform: translate(-50%, -50%);
   font-size: 90px;
-  color: #4a90e2;
+  color: white;
   white-space: nowrap;
 }
 
@@ -84,10 +84,10 @@ body {
 .weather {
   position: absolute;
   top: 15%;
-  left: 70%;
+  left: 68%;
   transform: translate(-50%, -50%);
   font-size: 200px;
-  color: #000000;
+  color: #0033d3;
 }
 
 #greetingTop {
@@ -114,7 +114,7 @@ body {
   left: 68%;
   transform: translate(-50%, -50%);
   font-size: 68px;
-  color: #4a90e2;
+  color: #0033d3;
 }
 
 </style>
@@ -264,31 +264,6 @@ async function fetchWeather() {
   }
 }
 
-/* ========================
-MENSAJE DINÁMICO
-======================== */
-function updateGreeting() {
-  const now = new Date();
-  const hour = now.getHours();
-  const minutes = now.getMinutes();
-
-  let topText = "";
-  let bottomText = "";
-
-  if (hour >= 5 && (hour < 12 || (hour === 12 && minutes === 0))) {
-    topText = "Buenos";
-    bottomText = "días";
-  } else if (hour < 18 || (hour === 18 && minutes === 0)) {
-    topText = "Buenas";
-    bottomText = "tardes";
-  } else if (hour < 23 || (hour === 23 && minutes <= 30)) {
-    topText = "Buenas";
-    bottomText = "noches";
-  }
-
-  document.getElementById("greetingTop").textContent = topText;
-  document.getElementById("greetingBottom").textContent = bottomText;
-}
 
 /* ========================
 INIT
